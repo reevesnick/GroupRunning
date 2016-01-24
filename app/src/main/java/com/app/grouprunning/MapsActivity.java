@@ -1,32 +1,25 @@
 package com.app.grouprunning;
-
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,LocationListener {
-
+public class MapsActivity extends FragmentActivity implements
+        OnMapReadyCallback,LocationListener {
     private GoogleMap mMap;
     LocationManager userLocation;
+    Location location;
     private static double latitude =0.0;
     private static double longitude = 0.0;
-    private static double alititude = 0.0;
-    private static double speed = 0.0;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +28,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        userLocation = (LocationManager)getSystemService(LOCATION_SERVICE);
-
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+            userLocation = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            location = userLocation.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        } else {
+            // Show rationale and request permission.
+        }
     }
     /**
      * Manipulates the map once available.
@@ -52,39 +51,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-        } else {
-            // Show rationale and request permission.
-        }
         // Add a marker in Sydney and move the camera
-        
-        LatLng latLng = new LatLng(getLatitude(), getLongitude());
-
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
+        LatLng currentLatLng = new LatLng(getLatitude(), getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
     }
-
-
     @Override
     public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        alititude = location.getAltitude();
-        speed = location.getSpeed();
-
+        latitude =  this.location.getLatitude();
+        longitude = this.location.getLongitude();
         System.out.println("Latitude: "+latitude);
         System.out.println("Longitude: "+longitude);
     }
-
     public double getLatitude(){
-
         return latitude;
     }
-
     public double getLongitude(){
         return longitude;
     }
