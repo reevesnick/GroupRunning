@@ -8,13 +8,17 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,LocationListener {
+
+
     private GoogleMap mMap;
     LocationManager userLocation;
     Location location;
@@ -28,16 +32,7 @@ public class MapsActivity extends FragmentActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-            userLocation = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            location = userLocation.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-        } else {
-            // Show rationale and request permission.
-        }
+
     }
     /**
      * Manipulates the map once available.
@@ -51,9 +46,32 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+            userLocation = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            location = userLocation.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            LatLng currentLatLng = new LatLng(latitude, longitude);
+            //setting initial zoom
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16));
+
+            //SOURCE: http://stackoverflow.com/questions/18425141/android-google-maps-api-v2-zoom-to-current-location
+            //animate camera to zoom to user location
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(currentLatLng)      // Sets the center of the map to location user
+                    .zoom(16)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else {
+            // Show rationale and request permission.
+        }
         // Add a marker in Sydney and move the camera
-        LatLng currentLatLng = new LatLng(getLatitude(), getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+
     }
     @Override
     public void onLocationChanged(Location location) {
