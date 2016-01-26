@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#047931"
+            android:background="#0EC5FF"
             android:clickable="true">
 
             <EditText
@@ -62,13 +62,14 @@
         <info.hoang8f.widget.FButton
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            fbutton:buttonColor="@color/fbutton_color_sun_flower"
+            fbutton:buttonColor="#00ff00"
             fbutton:shadowEnabled="true"
             fbutton:shadowHeight="5dp"
             fbutton:cornerRadius="5dp"
             android:layout_marginBottom="48dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:text="Start" />
+            android:text="Start"
+            android:id="@+id/startButton" />
     </RelativeLayout>
 </LinearLayout>
