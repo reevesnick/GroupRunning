@@ -71,7 +71,7 @@ public class MapsActivity extends FragmentActivity implements
 
                 String text = button.getText().toString();
                 if (text.equals("Start")) {
-                    textToSpeech.speak("Activity started",TextToSpeech.QUEUE_FLUSH,null,null);
+                    textToSpeech.speak("Run Forest, run",TextToSpeech.QUEUE_FLUSH,null,null);
                     button.setButtonColor(Color.RED);
                     button.setText("Stop");
 
