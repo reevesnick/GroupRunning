@@ -53,12 +53,9 @@ public class MapsActivity extends FragmentActivity implements
         setUpMapIfNeeded();
     }
 
-
-
     private void setUpMapIfNeeded() {
         if (mMap == null) {
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-            setUpMap();
         }
         if (mMap != null) {
             setUpMap();
