@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class MapsActivity extends FragmentActivity implements
     FButton button;
     TextToSpeech textToSpeech;
     Chronometer chronometer;
+    long time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,17 +130,20 @@ public class MapsActivity extends FragmentActivity implements
 
         String text = button.getText().toString();
         if (text.equals("Start")) {
-
-            textToSpeech.speak("Run started",TextToSpeech.QUEUE_FLUSH,null,null);
+            chronometer.setBase(SystemClock.elapsedRealtime() + time);
+            chronometer.start();
+            textToSpeech.speak("Run started", TextToSpeech.QUEUE_FLUSH, null, null);
             button.setButtonColor(Color.RED);
             button.setText("Stop");
 
         } else {
+            time = chronometer.getBase()- SystemClock.elapsedRealtime();
+            chronometer.stop();
             textToSpeech.speak("Run stopped", TextToSpeech.QUEUE_FLUSH, null, null);
             button.setButtonColor(Color.GREEN);
             button.setText("Start");
-
-
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            time =0;
         }
 
     }
