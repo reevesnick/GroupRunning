@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.nfc.Tag;
 import android.os.Build;
+import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -43,8 +45,13 @@ import java.util.Locale;
 
 import info.hoang8f.widget.FButton;
 
+
 public class MapsActivity extends FragmentActivity implements
+<<<<<<< HEAD
         OnMapReadyCallback,LocationListener,GoogleApiClient.ConnectionCallbacks {
+=======
+        OnMapReadyCallback,LocationListener, View.OnClickListener {
+>>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
 
 
     private GoogleMap mMap;
@@ -54,6 +61,7 @@ public class MapsActivity extends FragmentActivity implements
     private static double longitude = 0.0;
     FButton button;
     TextToSpeech textToSpeech;
+<<<<<<< HEAD
 
     //Google API Client needed for PubNub
     private GoogleApiClient mGoogleApiClient;
@@ -73,6 +81,10 @@ public class MapsActivity extends FragmentActivity implements
     };
 
 
+=======
+    Chronometer chronometer;
+    long time;
+>>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,9 +100,11 @@ public class MapsActivity extends FragmentActivity implements
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
+
         mapFragment.getMapAsync(this);
         button = (FButton)findViewById(R.id.startButton);
-
+        chronometer = (Chronometer)findViewById(R.id.chronometer);
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -100,10 +114,10 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
 
-      toggleButton();
-
+    button.setOnClickListener(this);
     }
 
+<<<<<<< HEAD
     private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -136,6 +150,8 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
     }
+=======
+>>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -183,6 +199,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onLocationChanged(Location location){
         this.location = location;
+<<<<<<< HEAD
         int flag =0;
         LatLng prev = new LatLng(0,0);
         LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
@@ -223,6 +240,11 @@ public class MapsActivity extends FragmentActivity implements
         mPubnub.publish("MainRunning", message, publishCallback);
 
 
+=======
+
+        System.out.println("Latitude: "+latitude);
+        System.out.println("Longitude: "+longitude);
+>>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
     }
 
     public double getLatitude(){
@@ -232,6 +254,7 @@ public class MapsActivity extends FragmentActivity implements
         return longitude;
     }
 
+<<<<<<< HEAD
     @Override
     public void onConnected(Bundle connectionHint) {
         LocationRequest mLocationRequest = createLocationRequest();
@@ -254,4 +277,29 @@ public class MapsActivity extends FragmentActivity implements
     public void onConnectionSuspended(int i) {
         System.err.print("Connection to Google API Suspended");
     }
+=======
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onClick(View v) {
+
+        String text = button.getText().toString();
+        if (text.equals("Start")) {
+            chronometer.setBase(SystemClock.elapsedRealtime() + time);
+            chronometer.start();
+            textToSpeech.speak("Run started", TextToSpeech.QUEUE_FLUSH, null, null);
+            button.setButtonColor(Color.RED);
+            button.setText("Stop");
+
+        } else {
+            time = chronometer.getBase()- SystemClock.elapsedRealtime();
+            chronometer.stop();
+            textToSpeech.speak("Run stopped", TextToSpeech.QUEUE_FLUSH, null, null);
+            button.setButtonColor(Color.GREEN);
+            button.setText("Start");
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            time =0;
+        }
+
+    }
+>>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
 }
