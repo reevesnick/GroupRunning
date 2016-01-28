@@ -31,11 +31,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
+import com.pubnub.api.PubnubException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,17 +70,62 @@ public class MapsActivity extends FragmentActivity implements
 
     private Pubnub mPubnub;
 
+    private PolylineOptions mPolylineOptions; // Polyline Options Variable
+    private LatLng mLatLng;
+
+    // PubNub Publish Callback
     Callback publishCallback = new Callback() {
         @Override
         public void successCallback(String channel, Object response) {
-            Log.d("PUBNUB", response.toString());
+
+            Log.d("PUBNUB-Success", response.toString());
         }
 
         @Override
         public void errorCallback(String channel, PubnubError error) {
-            Log.e("PUBNUB", error.toString());
+            Log.e("PUBNUB-Error:",  error.toString());
         }
     };
+
+    // PubNub Subscribe Callback
+    Callback subscribeCallback = new Callback() {
+
+        @Override
+        public void successCallback(String channel, Object message) {
+            JSONObject jsonMessage = (JSONObject) message;
+            try {
+                double mLat = jsonMessage.getDouble("lat");
+                double mLng = jsonMessage.getDouble("lng");
+                mLatLng = new LatLng(mLat, mLng);
+            } catch (JSONException e) {
+                Log.e("TAG", e.toString());
+            }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updatePolyline();
+                    updateCamera();
+                    updateMarker();
+                }
+            });
+        }
+           // Log.d("PUBNUB_TAG", "Message Received: " + message.toString());
+
+    };
+
+    private void updatePolyline() {
+        mMap.clear();
+        mMap.addPolyline(mPolylineOptions.add(mLatLng));
+    }
+
+    private void updateMarker() {
+        mMap.addMarker(new MarkerOptions().position(mLatLng));
+    }
+
+    private void updateCamera() {
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 16));
+    }
 
 
     @Override
@@ -91,7 +138,12 @@ public class MapsActivity extends FragmentActivity implements
         mGoogleApiClient.connect();
 
         mPubnub = new Pubnub("pub-c-330ec2e2-f6e7-4558-9010-5247b1f0b098", "sub-c-bad78d26-6f9f-11e5-ac0d-02ee2ddab7fe");
-
+            try{
+                mPubnub.subscribe("MainRunning",subscribeCallback);
+            }
+            catch (PubnubException e){
+                Log.e("PubNubException",e.toString());
+            }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -158,6 +210,7 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        initializeMap();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -187,6 +240,11 @@ public class MapsActivity extends FragmentActivity implements
         }
         // Add a marker in Sydney and move the camera
 
+    }
+
+    private void initializeMap() {
+        mPolylineOptions = new PolylineOptions();
+        mPolylineOptions.color(Color.BLUE).width(10f);
     }
 
 
