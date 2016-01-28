@@ -173,31 +173,6 @@ public class MapsActivity extends FragmentActivity implements
     }
 
 
-    public void toggleButton(){
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onClick(View v) {
-
-                String text = button.getText().toString();
-                if (text.equals("Start")) {
-                    textToSpeech.speak("Run Forest, run", TextToSpeech.QUEUE_FLUSH, null, null);
-                    button.setButtonColor(Color.RED);
-                    button.setText("Stop");
-
-                } else {
-                    textToSpeech.speak("Activity stopped", TextToSpeech.QUEUE_FLUSH, null, null);
-                    button.setButtonColor(Color.GREEN);
-                    button.setText("Start");
-
-
-                }
-
-            }
-        });
-    }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -238,7 +213,6 @@ public class MapsActivity extends FragmentActivity implements
         } else {
             // Show rationale and request permission.
         }
-        // Add a marker in Sydney and move the camera
 
     }
 
@@ -257,7 +231,6 @@ public class MapsActivity extends FragmentActivity implements
 
         if (flag==0){
             prev = current;
-            flag =1;
         }
 
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(current, 16);
@@ -267,10 +240,7 @@ public class MapsActivity extends FragmentActivity implements
         .visible(true));
         prev=current;
         current=null;
-//        latitude =  this.location.getLatitude();
-//        longitude = this.location.getLongitude();
-//        System.out.println("Latitude: "+latitude);
-//        System.out.println("Longitude: "+longitude);
+
 
         //PubNub Tracker Location Log
         Log.d("Location Update", "Latitude: " + location.getLatitude() +
