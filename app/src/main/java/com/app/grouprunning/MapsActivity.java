@@ -47,11 +47,8 @@ import info.hoang8f.widget.FButton;
 
 
 public class MapsActivity extends FragmentActivity implements
-<<<<<<< HEAD
-        OnMapReadyCallback,LocationListener,GoogleApiClient.ConnectionCallbacks {
-=======
-        OnMapReadyCallback,LocationListener, View.OnClickListener {
->>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
+        OnMapReadyCallback,LocationListener,GoogleApiClient.ConnectionCallbacks,View.OnClickListener {
+
 
 
     private GoogleMap mMap;
@@ -61,7 +58,10 @@ public class MapsActivity extends FragmentActivity implements
     private static double longitude = 0.0;
     FButton button;
     TextToSpeech textToSpeech;
-<<<<<<< HEAD
+
+
+    Chronometer chronometer;
+    long time;
 
     //Google API Client needed for PubNub
     private GoogleApiClient mGoogleApiClient;
@@ -81,10 +81,6 @@ public class MapsActivity extends FragmentActivity implements
     };
 
 
-=======
-    Chronometer chronometer;
-    long time;
->>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,7 +113,6 @@ public class MapsActivity extends FragmentActivity implements
     button.setOnClickListener(this);
     }
 
-<<<<<<< HEAD
     private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -150,8 +145,7 @@ public class MapsActivity extends FragmentActivity implements
             }
         });
     }
-=======
->>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -199,7 +193,6 @@ public class MapsActivity extends FragmentActivity implements
     @Override
     public void onLocationChanged(Location location){
         this.location = location;
-<<<<<<< HEAD
         int flag =0;
         LatLng prev = new LatLng(0,0);
         LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
@@ -240,11 +233,9 @@ public class MapsActivity extends FragmentActivity implements
         mPubnub.publish("MainRunning", message, publishCallback);
 
 
-=======
 
         System.out.println("Latitude: "+latitude);
         System.out.println("Longitude: "+longitude);
->>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
     }
 
     public double getLatitude(){
@@ -254,7 +245,6 @@ public class MapsActivity extends FragmentActivity implements
         return longitude;
     }
 
-<<<<<<< HEAD
     @Override
     public void onConnected(Bundle connectionHint) {
         LocationRequest mLocationRequest = createLocationRequest();
@@ -277,7 +267,6 @@ public class MapsActivity extends FragmentActivity implements
     public void onConnectionSuspended(int i) {
         System.err.print("Connection to Google API Suspended");
     }
-=======
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {
@@ -301,5 +290,4 @@ public class MapsActivity extends FragmentActivity implements
         }
 
     }
->>>>>>> 2a42e47fbd5063f09f04bd50c54b470fe1cd1071
 }
