@@ -26,7 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".JavaApplication">
-        <activity
+        <run
             android:name=".MapsActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -35,7 +35,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </run>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

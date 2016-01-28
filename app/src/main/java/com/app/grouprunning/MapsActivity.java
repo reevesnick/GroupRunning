@@ -1,14 +1,11 @@
 package com.app.grouprunning;
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
@@ -17,7 +14,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Chronometer;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,7 +28,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
@@ -42,7 +37,6 @@ import com.pubnub.api.PubnubException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Locale;
 
 import info.hoang8f.widget.FButton;
